@@ -8,12 +8,13 @@ $mtime = explode(" ",$mtime);
 $mtime = $mtime[1] + $mtime[0]; 
 $starttime = $mtime;
 ///// tomando el tiempo
-$query = "select * from comision where idcomision>=40;";
+$query = "select * from comision";
 $res = mysql_query($query);$i=0;
 
 while($row = mysql_fetch_array($res)){
     iniciativasComision($row["idcomision"]);
     echo '<br><br>------<br><br>';$i++;
+	//die();
 //    if($i==40){
 //	die();
 //    }
@@ -41,7 +42,7 @@ function get_string_between($string, $start, $end){
 function iniciativasComision($comision){
     $idlink = $comision-4;
     $estados = array('A'=>'Aprobada','D'=>'Desechada','R'=>'Atendida','P'=>'Pendiente');
-    $urlPagina = "http://sitl.diputados.gob.mx/LXI_leg/iniciativaslxi.php?comt=$idlink&edot=";
+    $urlPagina = "http://sitl.diputados.gob.mx/LXII_leg/iniciativaslxii.php?comt=$idlink&edot=";
     foreach($estados as $c=>$v){
         $urlTipo = $urlPagina.$c;
         echo $urlTipo.'--<br><br>';

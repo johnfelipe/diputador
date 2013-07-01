@@ -29,7 +29,7 @@ function validaTipo($var,$tipo){
     }
 }
 
-$tabla = file_get_contents('http://localhost/distritos.htm');
+$tabla = file_get_contents('http://www.ife.org.mx/documentos/DISTRITOS/planos_distritales_seccionales.html');
 $inicioTabla = '<tr height="11">
 <td height="11"></td>
 <td></td>

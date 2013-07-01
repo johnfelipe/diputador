@@ -13,7 +13,7 @@ function get_string_between($string, $start, $end){
 	return substr($string,$ini,$len);
 }
 
-$tabla = file_get_contents('http://localhost/diputados.htm');
+$tabla = file_get_contents('http://sitl.diputados.gob.mx/LXII_leg/listado_diputados_gpnp.php?tipot=TOTAL');
 $inicio = '<table align="center" width="760" border="0" cellspacing="2" cellpadding="2">';
 $fin = '</table>
 		</td>
@@ -21,17 +21,19 @@ $fin = '</table>
 $contenidoTabla = get_string_between($tabla, $inicio, $fin);
 $contenidoTabla = str_replace('</tr>','',$contenidoTabla);
 $tr = explode ('<tr>',$contenidoTabla);
-$partidos = array(1,3,2,5,4,12,6,9);//1=>pri 3=>pan 2=>prd 4=>pt 5=>pv 12=>na 6=>mc 9=>sp
+$partidos = array(1,3,2,5,6,4,12);//1=>pri 3=>pan 2=>prd 4=>pt 5=>pv 12=>na 6=>mc 9=>sp,9
 $anterior=2;$partido=-1;$nombreEntidad='';
 foreach($tr as $c => $linea){
     if(stripos($linea,'colspan')===false && stripos($linea,'<a href')==true){
         $sinTags = strip_tags(trim($linea));
+//		echo $sinTags."<br>";
         $iddip = explode(' ',$sinTags);
-        if($iddip[1]<$anterior){
+		//var_dump($iddip);
+        if($iddip[0]<$anterior){
             $partido++;
-            echo '<br />'.$partidos[$partido].'<br />';
+            echo '<br /> partido '.$partidos[$partido].'<br />';
         }
-        $anterior = $iddip[1];
+        $anterior = $iddip[0];
         $entidad = explode('</a>',$linea);
         $entidad = explode(' ',trim(strip_tags($entidad[1])));
         $circunscripcion='';
@@ -105,11 +107,19 @@ foreach($tr as $c => $linea){
 }
 
 ksort($diputados);
-
+//var_dump($diputados);//die();
 foreach($diputados as $c=>$diputado){
     $query = "select * from diputado where iddiputado = $c ";
     $res = mysql_query($query,$conexion);$idDiputado=0;
+	$idDiputado=0;
     while($row = mysql_fetch_array($res)){
+		if($diputado["nombre"] == $row["nombre"]){
+			echo "<font color='red'>";
+		}
+		echo $diputado["nombre"]." ".$row["nombre"]."<br>";
+		if($diputado["nombre"] == $row["nombre"]){
+			echo "</font>";
+		}
         $idDiputado = ($row["iddiputado"]!='')?$row["iddiputado"]:0;
     }
     if($idDiputado==0){    
